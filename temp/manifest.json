@@ -1,0 +1,48 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.13/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.13",
+  "id": "c29f74f0-973e-11ed-b390-e7a474f484cc",
+  "version": "0.0.1",
+  "packageName": "appteams",
+  "developer": {
+    "name": "bsoft",
+    "websiteUrl": "https://bf27-193-248-39-173.ngrok.io",
+    "privacyUrl": "https://bf27-193-248-39-173.ngrok.io/privacy.html",
+    "termsOfUseUrl": "https://bf27-193-248-39-173.ngrok.io/tou.html"
+  },
+  "name": {
+    "short": "app-teams",
+    "full": "app-teams"
+  },
+  "description": {
+    "short": "TODO: add short description here",
+    "full": "TODO: add full description here"
+  },
+  "icons": {
+    "outline": "icon-outline.png",
+    "color": "icon-color.png"
+  },
+  "accentColor": "#D85028",
+  "configurableTabs": [],
+  "staticTabs": [
+    {
+      "entityId": "c455e718-97af-4cc3-b232-98615b2736dc",
+      "name": "app-teamsTab",
+      "contentUrl": "https://bf27-193-248-39-173.ngrok.io/appTeamsTab/?name={loginHint}&tenant={tid}&theme={theme}",
+      "scopes": [
+        "personal"
+      ]
+    }
+  ],
+  "bots": [],
+  "connectors": [],
+  "composeExtensions": [],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "bf27-193-248-39-173.ngrok.io"
+  ],
+  "showLoadingIndicator": false
+}
