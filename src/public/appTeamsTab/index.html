@@ -7,13 +7,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- inject:css -->
   <!-- endinject -->
-  
+
 </head>
 
 <body>
   <div id='app'>
-    Loading...
+    Loading... test
   </div>
+  <!-- 
+  <b>Jeton SSO : </b>
+  <div type="text" id="TeamsTokens"></div>
+  d'accès : </b>
+  <div type="text" id="AccessToken"></div>
+
+  <div type="text" id="Error"></div>
+
+  <button id="btnServerSideToken" onclick="GetServerSideToken()">Demande le Jeton d'accès (OBO)</button>
+
+  <button id="btnConsent" onclick="MSALRequestConsent()">Consentements utilisateurs</button>
+
+
+   Microsoft Teams JavaScript API (via CDN) 
+   <script src="https://statics.teams.microsoft.com/sdk/v1.6.0/js/MicrosoftTeams.min.js"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#btnConsent").hide();
+      $("#btnServerSideToken").hide();
+
+      GetTeamsToken();
+    });
+    function GetTeamsToken() {
+
+      microsoftTeams.initialize(window);
+
+      microsoftTeams.authentication.getAuthToken({
+        successCallback: resultAccessToken => {
+          $('#TeamsTokens').text(resultAccessToken);
+          $("#btnServerSideToken").show();
+        },
+        failureCallback: reason => {
+          $('#Error').text(reason);
+        }
+      });
+    }
+
+    function GetServerSideToken() {
+      $("#btnConsent").hide();
+      var teamsToken = $('#TeamsTokens').text();
+      $.ajax({
+        url: window.location.origin.toLowerCase() + "/token",
+        headers: {
+          'Authorization': 'bearer ' + teamsToken
+        },
+        type: "get",
+        success: function (result, status) {
+          $('#AccessToken').text(result);
+          console.log(result);
+        },
+        error: function (result, status, error) {
+          let resultObject = JSON.parse(result.responseText);
+          $('#Error').text(error + ":" + resultObject.errorCode);
+          if (resultObject.errorCode === "invalid_grant" || resultObject.errorCode === "unauthorized_client") {
+            $("#btnConsent").show();
+            $("#btnServerSideToken").hide();
+
+          }
+
+        }
+
+      });
+    }
+    function MSALRequestConsent() {
+
+      // Redirige les consentements utilisateurs vers la page définie ici
+      microsoftTeams.authentication.authenticate({
+        url: window.location.origin + "/Popup/authPopupRedirect.html",
+        width: 1024,
+        height: 1024,
+        successCallback: (result) => {
+          $('#AccessToken').text(result);
+          $("#btnServerSideToken").show();
+        },
+        failureCallback: (reason) => {
+          $('#Error').text(reason);
+        }
+      });
+
+    } -- > -->
+
+  </script>
+
+
   <!-- inject:js -->
   <!-- endinject -->
   <script type='text/javascript'>

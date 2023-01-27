@@ -1,9 +1,13 @@
 import * as React from "react";
-import { Provider, Flex, Text, Button, Header } from "@fluentui/react-northstar";
+import { Provider, Flex, Text, Button, Header, Input, Image, Form, FormInput } from "@fluentui/react-northstar";
 import { useState, useEffect } from "react";
 import { useTeams } from "msteams-react-base-component";
-import { app } from "@microsoft/teams-js";
+import * as microsoftTeams from "@microsoft/teams-js";
+import { app } from "@microsoft/teams-js"
 import axios from "axios";
+import * as $ from 'jquery';
+
+
 
 
 /**
@@ -46,6 +50,7 @@ export const AppTeamsTab = () => {
             setEntityId(context.page.id);
         }
     }, [context]);
+
     // CALL API
     // login-info connect to API
     const connect = (e) => {
@@ -77,151 +82,136 @@ export const AppTeamsTab = () => {
                 }
             });
     };
+    const GetTeamsToken = () => {
+        microsoftTeams.initialize(window as any);
+
+        microsoftTeams.authentication.getAuthToken({
+            successCallback: resultAccessToken => {
+                $('#TeamsTokens').text("bonjour");
+                $("#btnServerSideToken").show();
+            },
+            failureCallback: reason => {
+                $('#Error').text(reason);
+            }
+        });
 
 
-    // async function fetchPokemon(name) {
-    //   const pokemonQuery = `
-    //     query PokemonInfo($name: String) {
-    //       pokemon(name: $name) {
-    //         id
-    //         number
-    //         name
-    //         image
-    //         attacks {
-    //           special {
-    //             name
-    //             type
-    //             damage
-    //           }
-    //         }
-    //       }
-    //     }
-    //   `
 
-    //   const response = await window.fetch('https://graphql-pokemon2.vercel.app/', {
-    //     // learn more about this API here: https://graphql-pokemon2.vercel.app/
-    //     method: 'POST',
-    //     headers: {
-    //       'content-type': 'application/json;charset=UTF-8',
-    //     },
-    //     body: JSON.stringify({
-    //       query: pokemonQuery,
-    //       variables: {name: name.toLowerCase()},
-    //     }),
-    //   })
+    }
 
-    //   const {data, errors} = await response.json()
-    //   if (response.ok) {
-    //     const pokemon = data?.pokemon
-    //     if (pokemon) {
-    //       // add fetchedAt helper (used in the UI to help differentiate requests)
-    //       pokemon.fetchedAt = formatDate(new Date())
-    //       return pokemon
-    //     } else {
-    //       return Promise.reject(new Error(`No pokemon with the name "${name}"`))
-    //     }
-    //   } else {
-    //     // handle the graphql errors
-    //     const error = new Error(errors?.map(e => e.message).join('\n') ?? 'unknown')
-    //     return Promise.reject(error)
-    //   }
-    // }
-    // document.getElementById('bonjour').onClick() = function() {
-    //     fetchPokemon('pikachu').then(data => document.getElementById('test').innerHTML = data.name);
-    // }
 
-    //     useEffect(() => {
-    //         if (inTeams === true) {
-    //             app.notifySuccess();
-    //         } else {
-    //             setEntityId("Not in Microsoft Teams");
-    //         }
-    //     }, [inTeams]);
 
-    //     useEffect(() => {
-    //         if (context) {
-    //             setEntityId(context.page.id);
-    //         }
-    //     }, [context]);
 
-    //     fetch("https://pokeapi.co/api/v2/pokemon/entei")
 
-    // function redirect() {
-    //     useEffect(() => {
-    //         const timeout = setTimeout(() => {
-    //             window.location.replace("http://google.fr");
-    //         }, 2000);
 
-    //         return () => clearTimeout(timeout);
-    //     }, []);
-    // }
-    // redirect();
+    GetTeamsToken();
 
-    /**
-     * The render() method to create the UI of the tab
-     */
+
+    const GetServerSideToken = () => {
+        $("#btnConsent").hide();
+        var teamsToken = $('#TeamsTokens').text();
+        $.ajax({
+            url: window.location.origin.toLowerCase() + "/token",
+            headers: {
+                'Authorization': 'bearer ' + teamsToken
+            },
+            type: "get",
+            success: function (result, status) {
+                $('#AccessToken').text(result);
+                console.log(result);
+            },
+            error: function (result, status, error) {
+                let resultObject = JSON.parse(result.responseText);
+                $('#Error').text(error + ":" + resultObject.errorCode);
+                if (resultObject.errorCode === "invalid_grant" || resultObject.errorCode === "unauthorized_client") {
+                    $("#btnConsent").show();
+                    $("#btnServerSideToken").hide();
+
+                }
+
+            }
+
+        });
+
+    }
+
+
+    const MSALRequestConsent = () => {
+        microsoftTeams.authentication.authenticate({
+            url: window.location.origin + "/appTeamsTab/authPopupRedirect.html",
+            width: 1024,
+            height: 1024,
+            successCallback: (result) => {
+                $('#AccessToken').text(result);
+                $("#btnServerSideToken").show();
+            },
+            failureCallback: (reason) => {
+                $('#Error').text(reason);
+            }
+        });
+
+    }
+
+
+
+
+
+
     return (
-        // <Provider theme={theme}>
-        //     <Flex fill={true} column styles={{
-        //         padding: ".8rem 0 .8rem .5rem"
-        //     }}>
-        //         <Flex.Item>
-        //             <Header content="This is your tab" />
-        //         </Flex.Item>
-        //         <Flex.Item>
-        //             <div>
-        //                 <div>
-        //                     <Text content={entityId} />
-        //                 </div>
 
-        //                 <div>
-        //                     <Button onClick={() => alert("It worked!")}>A sample button</Button>
-        //                 </div>
-        //                 <div>
-        //                     <Button>test</Button>
-        //                 </div>
-        //                 <div>
-        //                     <p id="test"></p>
-        //                 </div>
-        //             </div>
-        //         </Flex.Item>
-        //         <Flex.Item styles={{
-        //             padding: ".8rem 0 .8rem .5rem"
-        //         }}>
-        //             <Text size="smaller" content="(C) Copyright bsoft" />
-        //         </Flex.Item>
-        //     </Flex>
-        // </Provider>
+
+
 
         <Provider theme={theme}>
+
             <div className="app-container">
                 <div className="nav"></div>
-                <header>
-                    <img
+                <Header>
+                    <b>Jeton SSO : </b>
+                    <div id="TeamsTokens"></div>
+
+                    <button id="btnServerSideToken" onClick={() => GetServerSideToken()}>
+                        Demande le Jeton  d'accès (OBO)
+                    </button>
+                    <button id="btnConsent" onClick={() => MSALRequestConsent()}>
+                        Consentements utilisateurs
+                    </button>
+
+                    <button id="btnConsent" onClick={() => GetTeamsToken()}>
+                        clique batard
+                    </button>
+
+
+                    <Image
                         src="https://bsoft.fr/wp-content/uploads/2020/05/bsoft_simple.png"
                         alt="logo-blue"
                         style={{ width: "200px" }}
                     />
-                    <img
+                    <Image
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Microsoft_Office_Teams_%282018%E2%80%93present%29.svg/1200px-Microsoft_Office_Teams_%282018%E2%80%93present%29.svg.png"
                         alt="logo teams"
                         style={{ width: "150px" }}
                     />
-                </header>
+                </Header>
                 <div className="main">
-                    <form onSubmit={(e) => connect(e)}>
+                    <Form onSubmit={(e) => connect(e)}>
                         <input
                             type="email"
                             placeholder="Entrez votre e-mail..."
                             onChange={(e) => setEmail(e.target.value)}
                             value={email}
                         />
-                        <input type="password" name="" id="" placeholder="**********" />
-                        <input type="submit" value="ENVOYER" />
-                    </form>
+                        <FormInput type="password" name="" id="" placeholder="**********" />
+                        {/* <input type="submit" value="ENVOYER" /> */}
+                        <FormInput type="submit" value="ENVOYER"></FormInput>
+
+                    </Form>
                 </div>
             </div>
         </Provider>
+
+
+
 
 
     );
