@@ -6,9 +6,9 @@
   "packageName": "appteams",
   "developer": {
     "name": "bsoft",
-    "websiteUrl": "https://2a00-193-248-39-173.ngrok.io",
-    "privacyUrl": "https://2a00-193-248-39-173.ngrok.io/privacy.html",
-    "termsOfUseUrl": "https://2a00-193-248-39-173.ngrok.io/tou.html"
+    "websiteUrl": "https://fc30-193-248-39-173.ngrok.io",
+    "privacyUrl": "https://fc30-193-248-39-173.ngrok.io/privacy.html",
+    "termsOfUseUrl": "https://fc30-193-248-39-173.ngrok.io/tou.html"
   },
   "name": {
     "short": "app-teams",
@@ -16,7 +16,7 @@
   },
   "webApplicationInfo": {
     "id": "2659ab9e-b3da-44bb-bafc-f42660c2d132",
-    "resource": "api://ebcb-193-248-39-173.ngrok.io/2659ab9e-b3da-44bb-bafc-f42660c2d132"
+    "resource": "api://d5e7-193-248-39-173.ngrok.io/2659ab9e-b3da-44bb-bafc-f42660c2d132"
   },
   "description": {
     "short": "TODO: add short description here",
@@ -32,7 +32,7 @@
     {
       "entityId": "c455e718-97af-4cc3-b232-98615b2736dc",
       "name": "app-teamsTab",
-      "contentUrl": "https://2a00-193-248-39-173.ngrok.io/appTeamsTab/?name={loginHint}&tenant={tid}&theme={theme}",
+      "contentUrl": "https://fc30-193-248-39-173.ngrok.io/appTeamsTab/?name={loginHint}&tenant={tid}&theme={theme}",
       "scopes": [
         "personal"
       ]
@@ -46,7 +46,7 @@
     "messageTeamMembers"
   ],
   "validDomains": [
-    "2a00-193-248-39-173.ngrok.io"
+    "fc30-193-248-39-173.ngrok.io"
   ],
   "showLoadingIndicator": false
 }

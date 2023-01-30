@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 
 
 
+
 /**
  * Implementation of the app-teamsTab content page
  */
@@ -82,8 +83,10 @@ export const AppTeamsTab = () => {
                 }
             });
     };
+
     const GetTeamsToken = () => {
         microsoftTeams.initialize(window as any);
+
 
         microsoftTeams.authentication.getAuthToken({
             successCallback: resultAccessToken => {
@@ -98,6 +101,7 @@ export const AppTeamsTab = () => {
 
 
     }
+
 
 
 
